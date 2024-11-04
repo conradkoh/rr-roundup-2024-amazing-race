@@ -1,0 +1,34 @@
+/* ListItem.css */
+.list-item {
+  background: #e9e8e8;
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 5px;
+  transition:
+    transform 1s ease,
+    opacity 1s ease;
+}
+
+.list-item.new-item {
+  animation: slideDownFadeIn 1s ease;
+}
+
+@keyframes slideDownFadeIn {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+//
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

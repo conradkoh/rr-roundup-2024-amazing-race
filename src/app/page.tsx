@@ -1,17 +1,10 @@
 'use client';
-import { HealthBarComponent } from '@/app/components/health-bar/HealthBar';
-import { useCallback, useState } from 'react';
+import { EventLog } from '@/app/components/event-log/EventLog';
+import { HealthBar } from '@/app/components/health-bar/HealthBar';
+import { api } from '@convex/_generated/api';
+import { useQuery } from 'convex/react';
 
 export default function Home() {
-  const [health, setHealth] = useState(100);
-  const takeDamage = useCallback(
-    (dmg: number) => {
-      if (health > 0) {
-        setHealth(Math.max(health - dmg, 0));
-      }
-    },
-    [health]
-  );
   return (
     <>
       <div className="h-screen w-screen min-h-screen p-8 pb-20 font-[family-name:var(--font-geist-sans)]">
@@ -21,30 +14,38 @@ export default function Home() {
               Captain Chaos&apos; Lair
             </div>
             <div className="h-full flex flex-col justify-center items-center">
-              <HealthBarComponent health={health} />
-              <div className="pt-20 w-full text-center flex flex-col items-center">
-                <div className="text-xl">DAMAGE CONTROLS</div>
-                <div className="pt-3 w-full flex items-center justify-center space-x-3">
-                  <button
-                    className="p-2 rounded-sm bg-gray-200"
-                    onClick={() => takeDamage(5)}
-                  >
-                    HEAD (-5 HP)
-                  </button>
-                  <button
-                    className="p-2 rounded-sm bg-gray-200"
-                    onClick={() => takeDamage(2)}
-                  >
-                    BODY (-2 HP)
-                  </button>
-                </div>
-              </div>
+              <MainContent />
             </div>
           </div>
         </main>
         <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-          <div>Bethel RR Round Up 2024</div>
+          <div className="bg-gray-100 border border-gray-200 opacity-85 rounded-3xl p-5 fixed bottom-10">
+            Bethel RR Round Up 2024
+          </div>
         </footer>
+      </div>
+    </>
+  );
+}
+
+function MainContent() {
+  const health = useQuery(api.boss.health);
+  if (!health) {
+    return null;
+  }
+  if (health.remainder === 0) {
+    return (
+      <>
+        <div className="victory text-5xl">VICTORY! 🏆</div>
+      </>
+    );
+  }
+  return (
+    <>
+      <HealthBar />
+      <div className="pt-10"></div>
+      <div className="h-1/2 overflow-auto">
+        <EventLog />
       </div>
     </>
   );

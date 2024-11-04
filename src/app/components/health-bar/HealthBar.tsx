@@ -1,7 +1,11 @@
 import { asset } from '@/app/utils/assets';
+import { api } from '@convex/_generated/api';
+import { useQuery } from 'convex/react';
 import Image from 'next/image';
 export function HealthBar() {
-  return <HealthBarComponent health={100} />;
+  const health = useQuery(api.boss.health);
+  if (!health) return null;
+  return <HealthBarComponent health={health.remainder} />;
 }
 
 /**
