@@ -14,14 +14,14 @@ export default function Home() {
   );
   return (
     <>
-      <div className="h-screen min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <div className="h-screen w-screen min-h-screen p-8 pb-20 font-[family-name:var(--font-geist-sans)]">
         <main className="h-full w-full">
           <div className="w-full h-full items-center justify-center game-font">
             <div className="text-5xl text-center w-100">
               Captain Chaos&apos; Lair
             </div>
             <div className="h-full flex flex-col justify-center items-center">
-              <div className="flex justify-center items-center text-5xl">
+              <div className="w-full flex justify-center items-center text-5xl overflow-x-auto">
                 <HealthBar health={health} />
               </div>
               <div className="pt-20 w-full text-center flex flex-col items-center">
