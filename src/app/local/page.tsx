@@ -21,7 +21,9 @@ export default function Home() {
               Captain Chaos&apos; Lair
             </div>
             <div className="h-full flex flex-col justify-center items-center">
-              <HealthBarComponent health={health} />
+              <div className="w-full flex justify-center items-center text-5xl overflow-x-auto">
+                <HealthBarComponent health={health} />
+              </div>
               <div className="pt-20 w-full text-center flex flex-col items-center">
                 <div className="text-xl">DAMAGE CONTROLS</div>
                 <div className="pt-3 w-full flex items-center justify-center space-x-3">
