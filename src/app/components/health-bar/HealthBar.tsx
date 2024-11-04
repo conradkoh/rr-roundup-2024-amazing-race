@@ -14,6 +14,13 @@ export function HealthBar() {
  * @returns
  */
 export function HealthBarComponent(props: { health: number }) {
+  if (props.health === 0) {
+    return (
+      <div className="w-full flex justify-center items-center text-5xl overflow-x-auto">
+        <div className="game-font">GAME OVER</div>
+      </div>
+    );
+  }
   return (
     <div className="w-full flex justify-center items-center text-5xl overflow-x-auto">
       <Image src={asset('heart.png')} alt="Heart" width={100} height={100} />
