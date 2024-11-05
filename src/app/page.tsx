@@ -1,6 +1,7 @@
 'use client';
 import { EventLog } from '@/app/components/event-log/EventLog';
 import { HealthBar } from '@/app/components/health-bar/HealthBar';
+import { VictoryMessage } from '@/app/components/victory-message/VictoryMessage';
 import { api } from '@convex/_generated/api';
 import { useQuery } from 'convex/react';
 
@@ -34,11 +35,7 @@ function MainContent() {
     return null;
   }
   if (health.remainder === 0) {
-    return (
-      <>
-        <div className="victory text-5xl">VICTORY! 🏆</div>
-      </>
-    );
+    return <VictoryMessage />;
   }
   return (
     <>
