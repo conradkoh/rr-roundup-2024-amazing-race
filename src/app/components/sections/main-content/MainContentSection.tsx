@@ -13,7 +13,7 @@ export function MainContentSection() {
   }
 
   return (
-    <div className="game-font w-full h-full flex flex-col items-center justify-center">
+    <div className="game-font flex flex-col items-center justify-center">
       <ConditionalRender renderIf={() => health.remainder === 0}>
         <VictoryMessage />
       </ConditionalRender>

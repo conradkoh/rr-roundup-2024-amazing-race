@@ -35,6 +35,6 @@
 
 .event-log-list,
 .event-log-list::-webkit-scrollbar {
-  height: 300px;
+  min-height: 300px;
   overflow: auto;
 }

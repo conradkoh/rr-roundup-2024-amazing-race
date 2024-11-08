@@ -4,13 +4,13 @@ import { MainContentSection } from '@/app/components/sections/main-content';
 export default function Home() {
   return (
     <>
-      <div className="h-screen w-screen min-h-screen p-8 pb-20 font-[family-name:var(--font-geist-sans)]">
+      <div className="h-screen w-screen min-h-screen pt-8 font-[family-name:var(--font-geist-sans)]">
         <main className="h-full w-full">
-          <div className="game-font">
+          <div className="game-font h-full w-full flex flex-col">
             <div className="text-5xl text-center w-100">
               Captain Chaos&apos; Lair
             </div>
-            <div className="pt-10 flex flex-col justify-center items-center ">
+            <div className="pt-10 flex flex-col flex-grow">
               <MainContentSection />
             </div>
           </div>
