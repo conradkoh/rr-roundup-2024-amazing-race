@@ -16,7 +16,7 @@ export default function Home() {
           </div>
         </main>
         <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-end">
-          <div className="text-sm bg-gray-100 border border-gray-200 opacity-85 rounded-md p-2 fixed bottom-3 opacity-50">
+          <div className="text-sm bg-gray-100 border border-gray-200 rounded-md p-2 fixed bottom-3 opacity-50">
             Bethel RR Round Up 2024
           </div>
         </footer>
