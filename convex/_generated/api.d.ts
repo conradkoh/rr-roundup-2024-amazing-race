@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as boss from "../boss.js";
+import type * as gameState from "../gameState.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -25,6 +26,7 @@ import type * as boss from "../boss.js";
  */
 declare const fullApi: ApiFromModules<{
   boss: typeof boss;
+  gameState: typeof gameState;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

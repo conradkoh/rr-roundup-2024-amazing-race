@@ -38,14 +38,6 @@ export const takeDamage = mutation({
   },
 });
 
-export const reset = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const events = await ctx.db.query('events').collect();
-    await Promise.all(events.map((e) => ctx.db.delete(e._id)));
-  },
-});
-
 export const health = query({
   args: {},
   handler: async (ctx) => {

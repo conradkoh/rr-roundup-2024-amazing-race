@@ -9,5 +9,11 @@ const schema = defineSchema({
       amount: v.number(),
     }),
   }).index('by_timestamp', ['timestamp']),
+  gameState: defineTable({
+    status: v.object({
+      type: v.literal('started'),
+      startedAt: v.optional(v.number()),
+    }),
+  }),
 });
 export default schema;

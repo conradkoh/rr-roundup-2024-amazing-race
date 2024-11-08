@@ -3,3 +3,25 @@
   background-color: #4caf50;
   color: white;
 }
+
+.start {
+  background-color: #4caf50;
+}
+
+.stop {
+  background-color: #f44336;
+}
+
+.start-stop-btns {
+  min-width: 100px;
+  animation: fadeIn 0.2s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
