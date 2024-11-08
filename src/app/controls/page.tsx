@@ -128,8 +128,8 @@ export default function Controls() {
               </button>
             </div>
           </div>
-          <h2 className="pt-2 text-2xl font-bold">Barrier Control</h2>
-          <BarrierControlEmitter />
+          {/* <h2 className="pt-2 text-2xl font-bold">Barrier Control</h2>
+          <BarrierControlEmitter /> */}
 
           <h2 className="pt-2 text-2xl font-bold">Preview</h2>
           <div className="pt-8">
@@ -137,49 +137,49 @@ export default function Controls() {
           </div>
         </>
       )}
-    ></RenderIfDefined>
+    />
   );
 }
 
-function BarrierControlEmitter() {
-  const barrierState = useQuery(api.barrierState.get);
-  const tickToggle = useMutation(api.barrierState.tickToggle);
+// function BarrierControlEmitter() {
+//   const barrierState = useQuery(api.barrierState.get);
+//   const tickToggle = useMutation(api.barrierState.tickToggle);
 
-  useEffect(() => {
-    // timely updates - ideally, we want to try to do a fetch as close to the expected update time as possible
-    if (!barrierState?.nextTransition.at) {
-      return;
-    }
-    const current = Date.now();
-    const timeTillUpdate = barrierState?.nextTransition.at - current;
-    const timeout = setTimeout(() => {
-      tickToggle();
-    }, timeTillUpdate);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [barrierState?.nextTransition.at, tickToggle]);
+//   useEffect(() => {
+//     // timely updates - ideally, we want to try to do a fetch as close to the expected update time as possible
+//     if (!barrierState?.nextTransition.at) {
+//       return;
+//     }
+//     const current = Date.now();
+//     const timeTillUpdate = barrierState?.nextTransition.at - current;
+//     const timeout = setTimeout(() => {
+//       tickToggle();
+//     }, timeTillUpdate);
+//     return () => {
+//       clearTimeout(timeout);
+//     };
+//   }, [barrierState?.nextTransition.at, tickToggle]);
 
-  useEffect(() => {
-    // This is a fallback in case the timer dies - yet, it is susceptible to delays of up to 1s
-    const CHECK_INTERVAL = 3000;
-    const interval = setInterval(() => {
-      tickToggle();
-    }, CHECK_INTERVAL);
+//   useEffect(() => {
+//     // This is a fallback in case the timer dies - yet, it is susceptible to delays of up to 1s
+//     const CHECK_INTERVAL = 3000;
+//     const interval = setInterval(() => {
+//       tickToggle();
+//     }, CHECK_INTERVAL);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [tickToggle]);
-  return (
-    <>
-      <div>Barrier State: {barrierState?.barrierState || '-'}</div>
-      <div>
-        Next Transition At:{' '}
-        {barrierState?.nextTransition.at
-          ? new Date(barrierState?.nextTransition.at).toISOString()
-          : '-'}
-      </div>
-    </>
-  );
-}
+//     return () => {
+//       clearInterval(interval);
+//     };
+//   }, [tickToggle]);
+//   return (
+//     <>
+//       <div>Barrier State: {barrierState?.barrierState || '-'}</div>
+//       <div>
+//         Next Transition At:{' '}
+//         {barrierState?.nextTransition.at
+//           ? new Date(barrierState?.nextTransition.at).toISOString()
+//           : '-'}
+//       </div>
+//     </>
+//   );
+// }
