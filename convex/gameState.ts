@@ -1,20 +1,22 @@
 import { mutation, query } from './_generated/server';
 import { z } from 'zod';
+import { BARRIER_UP_INTERVAL } from './barrierState';
 
 export const start = mutation({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx, args) => {
     await ctx.db.insert('gameState', {
       status: {
         type: 'started',
         startedAt: Date.now(),
       },
     });
+    // set the barrier to up initially
     await ctx.db.insert('barrierTimerState', {
       barrierState: 'barrier_up',
-      maxTime: 30 * 1000,
+      maxTime: BARRIER_UP_INTERVAL,
       nextTransition: {
-        at: Date.now() + 30 * 1000,
+        at: Date.now() + BARRIER_UP_INTERVAL,
         nextState: 'barrier_down',
       },
     });

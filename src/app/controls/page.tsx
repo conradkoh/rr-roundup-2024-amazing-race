@@ -1,9 +1,7 @@
 'use client';
-import { EventLog } from '@/app/components/event-log/EventLog';
-import { HealthBar } from '@/app/components/health-bar/HealthBar';
 import { api } from '@convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import styles from './styles.module.scss';
 import {
   ConditionalRender,
@@ -14,9 +12,12 @@ import { MainContentSection } from '@/app/components/sections/main-content';
 export default function Controls() {
   const callTakeDamage = useMutation(api.boss.takeDamage);
   const reset = useMutation(api.gameState.reset);
-  const start = useMutation(api.gameState.start);
+  const callStart = useMutation(api.gameState.start);
   const stop = useMutation(api.gameState.stop);
   const gameState = useQuery(api.gameState.get);
+  const start = useCallback(() => {
+    callStart();
+  }, [callStart]);
   const takeDamage = useCallback(
     (dmg: { amount: number }) => {
       if (gameState?.status.type === 'started') {
@@ -143,23 +144,18 @@ export default function Controls() {
 
 function BarrierControlEmitter() {
   const barrierState = useQuery(api.barrierState.get);
-  const setBarrierState = useMutation(api.barrierState.set);
+  const tickToggle = useMutation(api.barrierState.tickToggle);
+  const lastState = useRef<any | undefined>(undefined);
   useEffect(() => {
-    if (barrierState !== undefined && barrierState !== null) {
-      const INTERVAL = 30 * 1000; // 30 seconds
-      var interval = setInterval(() => {
-        if (barrierState.barrierState === 'barrier_up') {
-          setBarrierState({
-            barrierState: 'barrier_down',
-            maxTime: barrierState.maxTime,
-            nextTransition: {
-              at: Date.now() + barrierState.maxTime,
-              nextState: 'barrier_up',
-            },
-          });
-        }
-      }, INTERVAL);
-    }
+    lastState.current = barrierState; //update whenever the barrier state changes
+  }, []);
+
+  useEffect(() => {
+    const CHECK_INTERVAL = 1000;
+    const interval = setInterval(() => {
+      tickToggle();
+    }, CHECK_INTERVAL);
+
     return () => {
       clearInterval(interval);
     };

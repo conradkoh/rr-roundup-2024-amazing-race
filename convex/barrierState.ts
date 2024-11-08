@@ -1,6 +1,9 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 
+export const BARRIER_UP_INTERVAL = 30 * 1000;
+export const BARRIER_DOWN_INTERVAL = 10 * 1000;
+
 export const get = query({
   args: {},
   handler: async (ctx, args) => {
@@ -31,5 +34,50 @@ export const set = mutation({
         nextState: args.nextTransition.nextState,
       },
     });
+  },
+});
+
+/**
+ * This function can be called any number of times, but expected to trigger a state change only when latest state has expired
+ */
+export const tickToggle = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const latestState = await ctx.db
+      .query('barrierTimerState')
+      .withIndex('by_creation_time')
+      .order('desc')
+      .first();
+    if (!latestState) {
+      return; //do nothing if there is not state
+    }
+    // check expiry
+    if (latestState.nextTransition.at > Date.now()) {
+      return; //do nothing if not needed
+    }
+    switch (latestState.barrierState) {
+      case 'barrier_up': {
+        await ctx.db.insert('barrierTimerState', {
+          barrierState: 'barrier_down',
+          maxTime: BARRIER_DOWN_INTERVAL,
+          nextTransition: {
+            at: Date.now() + BARRIER_DOWN_INTERVAL,
+            nextState: 'barrier_up',
+          },
+        });
+        break;
+      }
+      case 'barrier_down': {
+        await ctx.db.insert('barrierTimerState', {
+          barrierState: 'barrier_up',
+          maxTime: BARRIER_UP_INTERVAL,
+          nextTransition: {
+            at: Date.now() + BARRIER_UP_INTERVAL,
+            nextState: 'barrier_down',
+          },
+        });
+        break;
+      }
+    }
   },
 });

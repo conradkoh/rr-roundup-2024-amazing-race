@@ -5,7 +5,6 @@ import styles from './BarrierTimer.module.scss';
 import Image from 'next/image';
 import { asset } from '@/app/utils/assets';
 
-const BUFFER_TIME = 0;
 const FRAME_INTERVAL = Math.floor(1000 / 60); // 60 fps
 
 export function BarrierTimer() {
@@ -16,25 +15,15 @@ export function BarrierTimer() {
   if (gameState.status.type === 'ready') {
     return <div>Game has not started</div>;
   }
-  return (
-    <BarrierTimerView
-      barrierUpInterval={30 * 1000}
-      barrierDownInterval={30 * 1000}
-      startedAt={Date.now()}
-    />
-  );
+  return <BarrierTimerView startedAt={Date.now()} />;
 }
 
-function BarrierTimerView(props: {
-  barrierUpInterval: number;
-  barrierDownInterval: number;
-  startedAt: number;
-}) {
+function BarrierTimerView(props: { startedAt: number }) {
   const state = useQuery(api.barrierState.get);
-  const [visualState, setVisualState] = useState({
-    barrierState: 'barrier_up',
-    remainingTime: props.barrierUpInterval,
-  });
+  const [visualState, setVisualState] = useState<{
+    barrierState: 'barrier_up' | 'barrier_down';
+    remainingTime: number;
+  }>();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -53,9 +42,9 @@ function BarrierTimerView(props: {
     return () => {
       clearInterval(interval);
     };
-  }, [props.barrierDownInterval, props.barrierUpInterval, state]);
+  }, [state]);
 
-  switch (visualState.barrierState) {
+  switch (visualState?.barrierState) {
     case 'barrier_up':
       return (
         <div className="flex flex-col items-center justify-center">

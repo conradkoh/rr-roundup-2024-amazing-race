@@ -42,7 +42,7 @@ export function EventLog() {
   if (!events) return null;
   return (
     <div className={`game-font text-center`}>
-      <h2 className="pt-2 text-2xl font-bold">Event Log</h2>
+      {/* <h2 className="pt-2 text-2xl font-bold">Event Log</h2> */}
       <div
         className={`pt-8 px-5 flex flex-col gap-2 h-full ${styles['event-log-list']}`}
       >
