@@ -13,6 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as barrierState from "../barrierState.js";
 import type * as boss from "../boss.js";
 import type * as gameState from "../gameState.js";
 
@@ -25,6 +26,7 @@ import type * as gameState from "../gameState.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  barrierState: typeof barrierState;
   boss: typeof boss;
   gameState: typeof gameState;
 }>;

@@ -61,10 +61,6 @@ export default function Controls() {
       Component={({ value: gameState }) => (
         <>
           <h1 className="text-3xl font-bold">Controls</h1>
-          <p>
-            Click on the control when the boss is hit to cause him to take
-            damage.
-          </p>
           <h2 className="pt-2 text-2xl font-bold">Game</h2>
           <div className="pt-2 space-x-2">
             <ConditionalRender
@@ -102,6 +98,10 @@ export default function Controls() {
             </button>
           </div>
           <h2 className="pt-2 text-2xl font-bold">Damage</h2>
+          <p>
+            Click on the control when the boss is hit to cause him to take
+            damage.
+          </p>
           <div className="pt-2 flex space-x-2 items-end">
             <div>
               <div className="font-bold text-center">Hotkey: 1</div>
@@ -128,6 +128,9 @@ export default function Controls() {
               </button>
             </div>
           </div>
+          <h2 className="pt-2 text-2xl font-bold">Barrier Control</h2>
+          <BarrierControlEmitter />
+
           <h2 className="pt-2 text-2xl font-bold">Preview</h2>
           <div className="pt-8">
             <MainContentSection />
@@ -135,5 +138,41 @@ export default function Controls() {
         </>
       )}
     ></RenderIfDefined>
+  );
+}
+
+function BarrierControlEmitter() {
+  const barrierState = useQuery(api.barrierState.get);
+  const setBarrierState = useMutation(api.barrierState.set);
+  useEffect(() => {
+    if (barrierState !== undefined && barrierState !== null) {
+      const INTERVAL = 30 * 1000; // 30 seconds
+      var interval = setInterval(() => {
+        if (barrierState.barrierState === 'barrier_up') {
+          setBarrierState({
+            barrierState: 'barrier_down',
+            maxTime: barrierState.maxTime,
+            nextTransition: {
+              at: Date.now() + barrierState.maxTime,
+              nextState: 'barrier_up',
+            },
+          });
+        }
+      }, INTERVAL);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+  return (
+    <>
+      <div>Barrier State: {barrierState?.barrierState || '-'}</div>
+      <div>
+        Next Transition At:{' '}
+        {barrierState?.nextTransition.at
+          ? new Date(barrierState?.nextTransition.at).toISOString()
+          : '-'}
+      </div>
+    </>
   );
 }

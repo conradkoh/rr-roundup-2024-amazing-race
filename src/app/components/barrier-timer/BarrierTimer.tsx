@@ -30,14 +30,7 @@ function BarrierTimerView(props: {
   barrierDownInterval: number;
   startedAt: number;
 }) {
-  const [state, setState] = useState({
-    barrierState: 'barrier_up',
-    maxTime: props.barrierUpInterval,
-    nextTransition: {
-      at: props.startedAt + props.barrierUpInterval + BUFFER_TIME,
-      nextState: 'barrier_down',
-    },
-  });
+  const state = useQuery(api.barrierState.get);
   const [visualState, setVisualState] = useState({
     barrierState: 'barrier_up',
     remainingTime: props.barrierUpInterval,
@@ -45,48 +38,22 @@ function BarrierTimerView(props: {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const currentTime = Date.now();
-      // update internal state
-      if (currentTime > state.nextTransition.at) {
-        setState({
-          barrierState: state.nextTransition.nextState,
-          maxTime:
-            state.nextTransition.nextState === 'barrier_up'
-              ? props.barrierUpInterval
-              : props.barrierDownInterval,
-          nextTransition: {
-            at:
-              (state.nextTransition.nextState === 'barrier_up'
-                ? currentTime + props.barrierUpInterval
-                : currentTime + props.barrierDownInterval) + BUFFER_TIME,
-            nextState:
-              state.nextTransition.nextState === 'barrier_up'
-                ? 'barrier_down'
-                : 'barrier_up',
-          },
+      if (state) {
+        const currentTime = Date.now();
+        // update visual state
+        setVisualState({
+          barrierState: state.barrierState,
+          remainingTime: Math.min(
+            Math.max(state.nextTransition.at - currentTime, 0),
+            state.maxTime
+          ),
         });
       }
-
-      // update visual state
-      setVisualState({
-        barrierState: state.barrierState,
-        remainingTime: Math.min(
-          Math.max(state.nextTransition.at - currentTime, 0),
-          state.maxTime
-        ),
-      });
     }, FRAME_INTERVAL);
     return () => {
       clearInterval(interval);
     };
-  }, [
-    props.barrierDownInterval,
-    props.barrierUpInterval,
-    state.barrierState,
-    state.maxTime,
-    state.nextTransition.at,
-    state.nextTransition.nextState,
-  ]);
+  }, [props.barrierDownInterval, props.barrierUpInterval, state]);
 
   switch (visualState.barrierState) {
     case 'barrier_up':

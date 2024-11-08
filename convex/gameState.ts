@@ -10,6 +10,14 @@ export const start = mutation({
         startedAt: Date.now(),
       },
     });
+    await ctx.db.insert('barrierTimerState', {
+      barrierState: 'barrier_up',
+      maxTime: 30 * 1000,
+      nextTransition: {
+        at: Date.now() + 30 * 1000,
+        nextState: 'barrier_down',
+      },
+    });
   },
 });
 
@@ -18,6 +26,10 @@ export const stop = mutation({
   handler: async (ctx) => {
     const state = await ctx.db.query('gameState').collect();
     await Promise.all(state.map((e) => ctx.db.delete(e._id)));
+
+    // clear the barrier state
+    const barrierState = await ctx.db.query('barrierTimerState').collect();
+    await Promise.all(barrierState.map((e) => ctx.db.delete(e._id)));
   },
 });
 
@@ -31,6 +43,10 @@ export const reset = mutation({
     // clear the events
     const events = await ctx.db.query('events').collect();
     await Promise.all(events.map((e) => ctx.db.delete(e._id)));
+
+    // clear the barrier state
+    const barrierState = await ctx.db.query('barrierTimerState').collect();
+    await Promise.all(barrierState.map((e) => ctx.db.delete(e._id)));
   },
 });
 

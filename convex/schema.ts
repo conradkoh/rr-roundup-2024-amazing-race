@@ -15,5 +15,13 @@ const schema = defineSchema({
       startedAt: v.optional(v.number()),
     }),
   }),
+  barrierTimerState: defineTable({
+    barrierState: v.union(v.literal('barrier_up'), v.literal('barrier_down')),
+    maxTime: v.number(),
+    nextTransition: v.object({
+      at: v.number(),
+      nextState: v.union(v.literal('barrier_up'), v.literal('barrier_down')),
+    }),
+  }),
 });
 export default schema;
