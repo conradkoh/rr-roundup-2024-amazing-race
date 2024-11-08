@@ -15,10 +15,10 @@ export function BarrierTimer() {
   if (gameState.status.type === 'ready') {
     return <div>Game has not started</div>;
   }
-  return <BarrierTimerView startedAt={Date.now()} />;
+  return <BarrierTimerView />;
 }
 
-function BarrierTimerView(props: { startedAt: number }) {
+function BarrierTimerView() {
   const state = useQuery(api.barrierState.get);
   const [visualState, setVisualState] = useState<{
     barrierState: 'barrier_up' | 'barrier_down';
@@ -58,7 +58,7 @@ function BarrierTimerView(props: { startedAt: number }) {
           <div className="pt-8 text-4xl">BARRIER UP</div>
           <div>({(visualState.remainingTime / 1000).toFixed(1)}s left)</div>
           <div className="pt-4 font-mono text-lg text-center">
-            Phew! You're safe. Use this chance to shoot Captain Chaos!
+            Phew! You&apos;re safe. Use this chance to shoot Captain Chaos!
           </div>
         </div>
       );

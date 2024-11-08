@@ -2,11 +2,11 @@ import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 
 export const BARRIER_UP_INTERVAL = 30 * 1000;
-export const BARRIER_DOWN_INTERVAL = 10 * 1000;
+export const BARRIER_DOWN_INTERVAL = 30 * 1000;
 
 export const get = query({
   args: {},
-  handler: async (ctx, args) => {
+  handler: async (ctx) => {
     const state = await ctx.db
       .query('barrierTimerState')
       .withIndex('by_creation_time')

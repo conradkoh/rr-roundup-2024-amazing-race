@@ -1,7 +1,7 @@
 'use client';
 import { api } from '@convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 import styles from './styles.module.scss';
 import {
   ConditionalRender,
@@ -27,7 +27,7 @@ export default function Controls() {
         callTakeDamage(dmg);
       }
     },
-    [callTakeDamage, gameState?.status.type]
+    [callTakeDamage, gameState?.status.type, start]
   );
   // keyboard shortcuts
   useEffect(() => {
@@ -69,9 +69,7 @@ export default function Controls() {
             >
               <button
                 className={`p-2 font-mono font-bold rounded-md bg-gray-200 ${styles['start']} ${styles['start-stop-btns']}`}
-                onClick={useCallback(() => {
-                  start();
-                }, [gameState.status.type, start, stop])}
+                onClick={() => start()}
               >
                 START
               </button>
@@ -82,18 +80,14 @@ export default function Controls() {
               {/* STOP BUTTON */}
               <button
                 className={`p-2 font-mono font-bold rounded-md bg-gray-200 ${styles['stop']} ${styles['start-stop-btns']}`}
-                onClick={useCallback(() => {
-                  stop();
-                }, [stop])}
+                onClick={() => stop()}
               >
                 STOP
               </button>
             </ConditionalRender>
             <button
               className="p-2 font-mono font-bold rounded-md bg-gray-200"
-              onClick={useCallback(() => {
-                reset();
-              }, [reset])}
+              onClick={() => reset()}
             >
               RESET
             </button>
@@ -109,9 +103,9 @@ export default function Controls() {
               <button
                 id="5-dmg-btn"
                 className={`p-2 font-mono rounded-md bg-gray-200 ${styles['button']}`}
-                onClick={useCallback(() => {
+                onClick={() => {
                   takeDamage({ amount: 5 });
-                }, [takeDamage])}
+                }}
               >
                 HEAD (-5 HP)
               </button>
@@ -121,9 +115,9 @@ export default function Controls() {
               <button
                 id="2-dmg-btn"
                 className={`p-2 font-mono rounded-md bg-gray-200 ${styles['button']}`}
-                onClick={useCallback(() => {
+                onClick={() => {
                   takeDamage({ amount: 2 });
-                }, [takeDamage])}
+                }}
               >
                 BODY (-2 HP)
               </button>
@@ -145,10 +139,6 @@ export default function Controls() {
 function BarrierControlEmitter() {
   const barrierState = useQuery(api.barrierState.get);
   const tickToggle = useMutation(api.barrierState.tickToggle);
-  const lastState = useRef<any | undefined>(undefined);
-  useEffect(() => {
-    lastState.current = barrierState; //update whenever the barrier state changes
-  }, []);
 
   useEffect(() => {
     // timely updates - ideally, we want to try to do a fetch as close to the expected update time as possible
@@ -163,7 +153,7 @@ function BarrierControlEmitter() {
     return () => {
       clearTimeout(timeout);
     };
-  }, [barrierState?.nextTransition.at]);
+  }, [barrierState?.nextTransition.at, tickToggle]);
 
   useEffect(() => {
     // This is a fallback in case the timer dies - yet, it is susceptible to delays of up to 1s
@@ -175,7 +165,7 @@ function BarrierControlEmitter() {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [tickToggle]);
   return (
     <>
       <div>Barrier State: {barrierState?.barrierState || '-'}</div>

@@ -4,7 +4,7 @@ import { BARRIER_UP_INTERVAL } from './barrierState';
 
 export const start = mutation({
   args: {},
-  handler: async (ctx, args) => {
+  handler: async (ctx) => {
     await ctx.db.insert('gameState', {
       status: {
         type: 'started',
@@ -55,7 +55,7 @@ export const reset = mutation({
 export const get = query({
   args: {},
   handler: async (ctx): Promise<z.infer<typeof gameStateSchema>> => {
-    let gameState = await ctx.db.query('gameState').first();
+    const gameState = await ctx.db.query('gameState').first();
     if (gameState === null) {
       return {
         status: {
