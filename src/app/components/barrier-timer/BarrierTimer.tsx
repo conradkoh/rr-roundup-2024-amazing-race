@@ -55,8 +55,10 @@ function BarrierTimerView(props: { startedAt: number }) {
             height={300}
             className={`${styles['barrier-icon']}`}
           />
-          <div className="pt-8">
-            BARRIER UP ({(visualState.remainingTime / 1000).toFixed(1)}s left)
+          <div className="pt-8 text-4xl">BARRIER UP</div>
+          <div>({(visualState.remainingTime / 1000).toFixed(1)}s left)</div>
+          <div className="pt-4 font-mono text-lg text-center">
+            Phew! You're safe. Use this chance to shoot Captain Chaos!
           </div>
         </div>
       );
@@ -70,8 +72,10 @@ function BarrierTimerView(props: { startedAt: number }) {
             height={300}
             className={`${styles['barrier-icon']}`}
           />
-          <div className="pt-8">
-            BARRIER DOWN ({(visualState.remainingTime / 1000).toFixed(1)}s left)
+          <div className="pt-8 text-4xl">BARRIER DOWN</div>
+          <div>({(visualState.remainingTime / 1000).toFixed(1)}s left)</div>
+          <div className="pt-4 font-mono text-lg text-center">
+            Captain Chaos is loose! Run for your life and regather your ammo!
           </div>
         </div>
       );

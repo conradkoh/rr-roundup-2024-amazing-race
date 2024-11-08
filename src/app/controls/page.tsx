@@ -151,7 +151,23 @@ function BarrierControlEmitter() {
   }, []);
 
   useEffect(() => {
-    const CHECK_INTERVAL = 1000;
+    // timely updates - ideally, we want to try to do a fetch as close to the expected update time as possible
+    if (!barrierState?.nextTransition.at) {
+      return;
+    }
+    const current = Date.now();
+    const timeTillUpdate = barrierState?.nextTransition.at - current;
+    const timeout = setTimeout(() => {
+      tickToggle();
+    }, timeTillUpdate);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [barrierState?.nextTransition.at]);
+
+  useEffect(() => {
+    // This is a fallback in case the timer dies - yet, it is susceptible to delays of up to 1s
+    const CHECK_INTERVAL = 3000;
     const interval = setInterval(() => {
       tickToggle();
     }, CHECK_INTERVAL);

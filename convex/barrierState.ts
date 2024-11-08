@@ -43,6 +43,7 @@ export const set = mutation({
 export const tickToggle = mutation({
   args: {},
   handler: async (ctx) => {
+    const LATENCY_BUFFER = 300; //500 ms
     const latestState = await ctx.db
       .query('barrierTimerState')
       .withIndex('by_creation_time')
@@ -61,7 +62,7 @@ export const tickToggle = mutation({
           barrierState: 'barrier_down',
           maxTime: BARRIER_DOWN_INTERVAL,
           nextTransition: {
-            at: Date.now() + BARRIER_DOWN_INTERVAL,
+            at: Date.now() + LATENCY_BUFFER + BARRIER_DOWN_INTERVAL,
             nextState: 'barrier_up',
           },
         });
@@ -72,7 +73,7 @@ export const tickToggle = mutation({
           barrierState: 'barrier_up',
           maxTime: BARRIER_UP_INTERVAL,
           nextTransition: {
-            at: Date.now() + BARRIER_UP_INTERVAL,
+            at: Date.now() + LATENCY_BUFFER + BARRIER_UP_INTERVAL,
             nextState: 'barrier_down',
           },
         });
