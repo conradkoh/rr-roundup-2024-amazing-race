@@ -91,6 +91,11 @@ export default function Controls() {
             >
               RESET
             </button>
+            <a href="/" target="_blank">
+              <button className="p-2 font-mono font-bold rounded-md bg-gray-200">
+                OPEN PRESENTER VIEW
+              </button>
+            </a>
           </div>
           <h2 className="pt-2 text-2xl font-bold">Damage</h2>
           <p>

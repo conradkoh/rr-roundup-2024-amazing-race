@@ -64,13 +64,26 @@ export const eventLog = query({
       .withIndex('by_timestamp')
       .order('desc')
       .collect();
-    return latest10Events.map((e) => ({
-      ...e,
-      icon: e.type === 'take_damage' ? '💥' : '💤',
-      text:
-        e.type === 'take_damage'
-          ? `Captain Chaos took ${e.damage.amount} damage`
-          : '',
-    }));
+
+    return latest10Events.map((e) => {
+      let desc = '';
+      let icon = '';
+      if (e.type === 'take_damage') {
+        if (e.damage.amount === 5) {
+          desc = '[HEADSHOT] ';
+          icon = '💥';
+        } else {
+          icon = '➖';
+        }
+      }
+      return {
+        ...e,
+        icon,
+        text:
+          e.type === 'take_damage'
+            ? `${desc}Captain Chaos took ${e.damage.amount} damage`
+            : '',
+      };
+    });
   },
 });

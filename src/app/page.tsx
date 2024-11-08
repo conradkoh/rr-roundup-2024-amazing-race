@@ -7,7 +7,8 @@ import { useQuery } from 'convex/react';
 export default function Home() {
   const gameState = useQuery(api.gameState.get);
   if (gameState === undefined) {
-    return <div>Loading...</div>;
+    // return <div>Loading...</div>;
+    return <></>;
   }
 
   return (

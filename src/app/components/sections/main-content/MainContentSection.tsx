@@ -5,6 +5,7 @@ import { HealthBar } from '@/app/components/health-bar/HealthBar';
 import { VictoryMessage } from '@/app/components/victory-message/VictoryMessage';
 import { api } from '@convex/_generated/api';
 import { useQuery } from 'convex/react';
+import styles from './MainContentSection.module.scss';
 
 export function MainContentSection() {
   const health = useQuery(api.boss.health);
@@ -15,7 +16,9 @@ export function MainContentSection() {
   return (
     <div className="game-font flex flex-col items-center justify-center">
       <ConditionalRender renderIf={() => health.remainder === 0}>
-        <VictoryMessage />
+        <div className={`p-5 ${styles['victory-container']}`}>
+          <VictoryMessage />
+        </div>
       </ConditionalRender>
       <ConditionalRender renderIf={() => health.remainder > 0}>
         <HealthBar />
