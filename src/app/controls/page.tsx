@@ -2,7 +2,7 @@
 import { api } from '@convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
 import { calculateCompletionTime } from '@/app/utils/time';
-import { useCallback, useEffect, useState, useMemo } from 'react';
+import { useCallback, useEffect, useState, useMemo, useRef } from 'react';
 import styles from './styles.module.scss';
 import {
   ConditionalRender,
@@ -21,6 +21,9 @@ export default function Controls() {
   
   const [showTeamModal, setShowTeamModal] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
+  
+  // Ref to track previous game state for detecting transitions
+  const previousGameStateRef = useRef<string | null>(null);
   
   const start = useCallback(() => {
     callStart();
@@ -52,6 +55,7 @@ export default function Controls() {
 
   const handleResetClick = useCallback(() => {
     reset();
+    setShowTeamModal(false); // Close modal on reset
   }, [reset]);
 
   const handleTeamModalOpen = useCallback(() => {
@@ -74,6 +78,20 @@ export default function Controls() {
   const isGameStarted = useMemo(() => gameState?.status.type === 'started', [gameState?.status.type]);
   const isGameReady = useMemo(() => gameState?.status.type === 'ready', [gameState?.status.type]);
   const isBossDefeated = useMemo(() => gameState?.status.type === 'boss_defeated', [gameState?.status.type]);
+
+  // Auto-show team modal when state transitions to boss_defeated
+  useEffect(() => {
+    const currentGameState = gameState?.status.type;
+    const previousGameState = previousGameStateRef.current;
+    
+    // Only show modal if we just transitioned to boss_defeated (not if we're already in that state)
+    if (currentGameState === 'boss_defeated' && previousGameState !== 'boss_defeated' && !showTeamModal) {
+      setShowTeamModal(true);
+    }
+    
+    // Update the ref with current state for next comparison
+    previousGameStateRef.current = currentGameState || null;
+  }, [gameState?.status.type, showTeamModal]);
   const handleHeadDamage = useCallback(() => {
     takeDamage({ amount: 5 });
   }, [takeDamage]);
