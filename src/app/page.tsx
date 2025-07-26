@@ -10,7 +10,6 @@ export default function Home() {
     // return <div>Loading...</div>;
     return <></>;
   }
-
   return (
     <>
       {/* Waiting Room Screen */}

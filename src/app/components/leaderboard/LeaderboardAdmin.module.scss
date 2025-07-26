@@ -1,0 +1,219 @@
+.container {
+  font-family: 'Press Start 2P', monospace;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #ff6b6b;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.title {
+  color: #ff6b6b;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.recordCount {
+  color: #cccccc;
+  font-size: 0.6rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  text-align: center;
+  color: #cccccc;
+  font-size: 0.8rem;
+  padding: 2rem;
+}
+
+.emptyState {
+  text-align: center;
+  color: #cccccc;
+  font-size: 0.7rem;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.table {
+  width: 100%;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 50px 1fr 80px 120px 100px;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 107, 107, 0.1);
+  border-bottom: 2px solid #ff6b6b;
+  font-size: 0.6rem;
+  color: #ff6b6b;
+  text-transform: uppercase;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 50px 1fr 80px 120px 100px;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.6rem;
+  color: #ffffff;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.tableRow:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.rank {
+  text-align: center;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.teamName {
+  font-weight: bold;
+  color: #00ff00;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.time {
+  text-align: center;
+  font-weight: bold;
+  color: #ffff00;
+}
+
+.date {
+  text-align: center;
+  color: #cccccc;
+  font-size: 0.5rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.editInput {
+  width: 100%;
+  padding: 0.25rem;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+  background: #1a1a1a;
+  border: 1px solid #666;
+  border-radius: 2px;
+  color: #ffffff;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: #00ff00;
+}
+
+.editActions,
+.normalActions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.editButton,
+.deleteButton,
+.saveButton,
+.cancelButton {
+  background: transparent;
+  border: 1px solid;
+  border-radius: 2px;
+  padding: 0.25rem;
+  cursor: pointer;
+  font-size: 0.6rem;
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.editButton {
+  border-color: #4a90e2;
+  color: #4a90e2;
+}
+
+.editButton:hover {
+  background: #4a90e2;
+  color: #ffffff;
+}
+
+.deleteButton {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+.deleteButton:hover {
+  background: #ff6b6b;
+  color: #ffffff;
+}
+
+.saveButton {
+  border-color: #00ff00;
+  color: #00ff00;
+}
+
+.saveButton:hover:not(:disabled) {
+  background: #00ff00;
+  color: #000000;
+}
+
+.saveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancelButton {
+  border-color: #666;
+  color: #666;
+}
+
+.cancelButton:hover {
+  background: #666;
+  color: #ffffff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 40px 1fr 60px 80px 80px;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    font-size: 0.5rem;
+  }
+
+  .title {
+    font-size: 0.8rem;
+  }
+
+  .date {
+    font-size: 0.4rem;
+  }
+
+  .editInput {
+    font-size: 0.5rem;
+  }
+
+  .editButton,
+  .deleteButton,
+  .saveButton,
+  .cancelButton {
+    min-width: 20px;
+    height: 20px;
+    font-size: 0.5rem;
+  }
+}

@@ -47,11 +47,51 @@ export const health = query({
       .map((e) => e.damage.amount)
       .reduce((a, b) => a + b, 0);
 
+    const remainder = Math.max(MAX_HEALTH - damageTaken, 0);
+    const isDead = remainder === 0;
+
     return {
       config: {
         maxHealth: MAX_HEALTH,
       },
-      remainder: Math.max(MAX_HEALTH - damageTaken, 0),
+      remainder,
+      isDead,
+    };
+  },
+});
+
+export const getBossDeathInfo = query({
+  args: {},
+  handler: async (ctx) => {
+    const events = await ctx.db.query('events').collect();
+    const damageTaken = events
+      .filter((e) => e.type === 'take_damage')
+      .map((e) => e.damage.amount)
+      .reduce((a, b) => a + b, 0);
+
+    if (damageTaken < MAX_HEALTH) {
+      return null; // Boss is not dead yet
+    }
+
+    // Find the event that killed the boss (brought total damage to MAX_HEALTH)
+    const damageEvents = events
+      .filter((e) => e.type === 'take_damage')
+      .sort((a, b) => a.timestamp - b.timestamp);
+
+    let cumulativeDamage = 0;
+    let deathTimestamp = null;
+
+    for (const event of damageEvents) {
+      cumulativeDamage += event.damage.amount;
+      if (cumulativeDamage >= MAX_HEALTH) {
+        deathTimestamp = event.timestamp;
+        break;
+      }
+    }
+
+    return {
+      deathTimestamp,
+      totalDamage: damageTaken,
     };
   },
 });
