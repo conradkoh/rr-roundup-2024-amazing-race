@@ -16,7 +16,6 @@ export default function Controls() {
   const reset = useMutation(api.gameState.reset);
   const callStart = useMutation(api.gameState.start);
   const gameState = useQuery(api.gameState.get);
-  const health = useQuery(api.boss.health);
   const addLeaderboardRecord = useMutation(api.leaderboard.addRecord);
   
   const [showTeamModal, setShowTeamModal] = useState(false);

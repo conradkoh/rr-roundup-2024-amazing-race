@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { LeaderboardAdmin } from './LeaderboardAdmin';
 import styles from './LeaderboardAdminModal.module.scss';
 
