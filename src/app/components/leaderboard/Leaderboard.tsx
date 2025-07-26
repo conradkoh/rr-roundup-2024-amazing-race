@@ -27,7 +27,18 @@ export function Leaderboard({
     });
   };
 
-  if (!records || records.length === 0) {
+  if (records === undefined) {
+    return (
+      <div className={`${standalone ? styles.standaloneLeaderboard : styles.leaderboard} ${className}`}>
+        {showHeader && <h2 className={styles.header}>🏆 Leaderboard</h2>}
+        <div className={styles.emptyState}>
+          Loading leaderboard...
+        </div>
+      </div>
+    );
+  }
+
+  if (records.length === 0) {
     return (
       <div className={`${standalone ? styles.standaloneLeaderboard : styles.leaderboard} ${className}`}>
         {showHeader && <h2 className={styles.header}>🏆 Leaderboard</h2>}
