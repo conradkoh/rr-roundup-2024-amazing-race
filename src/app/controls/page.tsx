@@ -15,23 +15,13 @@ export default function Controls() {
   const callTakeDamage = useMutation(api.boss.takeDamage);
   const reset = useMutation(api.gameState.reset);
   const callStart = useMutation(api.gameState.start);
-  const stop = useMutation(api.gameState.stop);
   const gameState = useQuery(api.gameState.get);
   const health = useQuery(api.boss.health);
-  const bossDeathInfo = useQuery(api.boss.getBossDeathInfo);
   const addLeaderboardRecord = useMutation(api.leaderboard.addRecord);
   
   const [showTeamModal, setShowTeamModal] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
-  const [gameStartTime, setGameStartTime] = useState<number | null>(null);
   
-  // Set game start time when game starts (for completion time calculation)
-  useEffect(() => {
-    if (gameState?.status.type === 'started' && !gameStartTime) {
-      setGameStartTime(gameState.status.startedAt);
-    }
-  }, [gameState?.status, gameStartTime]);
-
   const start = useCallback(() => {
     callStart();
   }, [callStart]);
@@ -49,24 +39,20 @@ export default function Controls() {
   );
 
   const handleTeamSubmission = useCallback(async (teamName: string) => {
-    if (!bossDeathInfo || !gameStartTime) return;
+    if (gameState?.status.type !== 'boss_defeated') return;
     
     await addLeaderboardRecord({
       teamName,
-      gameStartTime: gameStartTime,
-      gameEndTime: bossDeathInfo.deathTimestamp!,
+      gameStartTime: gameState.status.startedAt,
+      gameEndTime: gameState.status.defeatedAt,
     });
     
     setShowTeamModal(false);
-  }, [bossDeathInfo, gameStartTime, addLeaderboardRecord]);
+  }, [gameState?.status, addLeaderboardRecord]);
 
   const handleResetClick = useCallback(() => {
     reset();
   }, [reset]);
-
-  const handleStopClick = useCallback(() => {
-    stop();
-  }, [stop]);
 
   const handleTeamModalOpen = useCallback(() => {
     setShowTeamModal(true);
@@ -87,7 +73,7 @@ export default function Controls() {
   // Memoized computed values
   const isGameStarted = useMemo(() => gameState?.status.type === 'started', [gameState?.status.type]);
   const isGameReady = useMemo(() => gameState?.status.type === 'ready', [gameState?.status.type]);
-  const isBossDefeated = useMemo(() => !!(health?.isDead && bossDeathInfo), [health?.isDead, bossDeathInfo]);
+  const isBossDefeated = useMemo(() => gameState?.status.type === 'boss_defeated', [gameState?.status.type]);
   const handleHeadDamage = useCallback(() => {
     takeDamage({ amount: 5 });
   }, [takeDamage]);
@@ -98,9 +84,11 @@ export default function Controls() {
 
   // Memoized computed values
   const completionTime = useMemo(() => {
-    if (!bossDeathInfo || !gameStartTime) return 0;
-    return bossDeathInfo.deathTimestamp! - gameStartTime;
-  }, [bossDeathInfo, gameStartTime]);
+    if (gameState?.status.type === 'boss_defeated') {
+      return gameState.status.defeatedAt - gameState.status.startedAt;
+    }
+    return 0;
+  }, [gameState?.status]);
   // keyboard shortcuts
   const handleKeyboardShortcuts = useCallback((e: KeyboardEvent) => {
     if (e.key === '1') {
@@ -136,11 +124,22 @@ export default function Controls() {
           <h1 className="text-3xl font-bold">Controls</h1>
           
           {/* Timer Display */}
-          <ConditionalRender renderIf={() => isGameStarted}>
+          <ConditionalRender renderIf={() => isGameStarted || isBossDefeated}>
             <div className="pt-4">
               <h2 className="text-2xl font-bold text-green-400">⏱️ Game Timer</h2>
-              {isGameStarted && gameState.status.type === 'started' && (
+              {gameState.status.type === 'started' && (
                 <GameTimer startTime={gameState.status.startedAt} />
+              )}
+              {gameState.status.type === 'boss_defeated' && (
+                <div className="pt-2 text-4xl font-mono font-bold text-yellow-400">
+                  {(() => {
+                    const elapsed = gameState.status.defeatedAt - gameState.status.startedAt;
+                    const seconds = Math.floor(elapsed / 1000);
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')} (FINAL)`;
+                  })()}
+                </div>
               )}
             </div>
           </ConditionalRender>
@@ -155,17 +154,6 @@ export default function Controls() {
                 onClick={start}
               >
                 START
-              </button>
-            </ConditionalRender>
-            <ConditionalRender
-              renderIf={() => isGameStarted}
-            >
-              {/* STOP BUTTON */}
-              <button
-                className={`p-2 font-mono font-bold rounded-md bg-gray-200 ${styles['stop']} ${styles['start-stop-btns']}`}
-                onClick={handleStopClick}
-              >
-                STOP
               </button>
             </ConditionalRender>
             <button
@@ -247,7 +235,7 @@ export default function Controls() {
           </div>
 
           {/* Team Name Modal */}
-          {bossDeathInfo && gameStartTime && (
+          {gameState?.status.type === 'boss_defeated' && (
             <TeamNameModal
               isOpen={showTeamModal}
               onSubmit={handleTeamSubmission}

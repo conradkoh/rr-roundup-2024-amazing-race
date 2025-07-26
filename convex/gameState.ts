@@ -67,15 +67,36 @@ export const get = query({
   },
 });
 
+export const getBossDefeatInfo = query({
+  args: {},
+  handler: async (ctx) => {
+    const gameState = await ctx.db.query('gameState').first();
+    if (!gameState || gameState.status.type !== 'boss_defeated') {
+      return null;
+    }
+    
+    return {
+      startedAt: gameState.status.startedAt,
+      defeatedAt: gameState.status.defeatedAt,
+      duration: gameState.status.defeatedAt - gameState.status.startedAt,
+    };
+  },
+});
+
 // internal
 const gameStateSchema = z.object({
   status: z.union([
+    z.object({
+      type: z.literal('ready'),
+    }),
     z.object({
       type: z.literal('started'),
       startedAt: z.number(),
     }),
     z.object({
-      type: z.literal('ready'),
+      type: z.literal('boss_defeated'),
+      startedAt: z.number(),
+      defeatedAt: z.number(),
     }),
   ]),
 });

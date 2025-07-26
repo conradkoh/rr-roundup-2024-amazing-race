@@ -10,10 +10,17 @@ const schema = defineSchema({
     }),
   }).index('by_timestamp', ['timestamp']),
   gameState: defineTable({
-    status: v.object({
-      type: v.literal('started'),
-      startedAt: v.optional(v.number()),
-    }),
+    status: v.union(
+      v.object({
+        type: v.literal('started'),
+        startedAt: v.number(),
+      }),
+      v.object({
+        type: v.literal('boss_defeated'),
+        startedAt: v.number(),
+        defeatedAt: v.number(),
+      }),
+    ),
   }),
   barrierTimerState: defineTable({
     barrierState: v.union(v.literal('barrier_up'), v.literal('barrier_down')),

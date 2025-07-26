@@ -14,14 +14,14 @@ export default function Home() {
     <>
       {/* Waiting Room Screen */}
       <div
-        className={`top-0 left-0 waiting-room-root h-screen w-screen flex flex-col items-center justify-center ${gameState.status.type === 'started' ? 'fadeout' : ''}`}
+        className={`top-0 left-0 waiting-room-root h-screen w-screen flex flex-col items-center justify-center ${gameState.status.type === 'started' || gameState.status.type === 'boss_defeated' ? 'fadeout' : ''}`}
       >
         <div className="text-red-600 game-font text-9xl text-shadow-lg p-5 pb-1 rounded-md">
           CHAOS LAIR
         </div>
       </div>
       {/* Main Screen */}
-      <ConditionalRender renderIf={() => gameState.status.type === 'started'}>
+      <ConditionalRender renderIf={() => gameState.status.type === 'started' || gameState.status.type === 'boss_defeated'}>
         <div
           className={`top-0 left-0 h-screen w-screen min-h-screen pt-8 font-[family-name:var(--font-geist-sans)] fadein`}
         >
