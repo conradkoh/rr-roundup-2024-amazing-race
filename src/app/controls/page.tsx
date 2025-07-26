@@ -1,6 +1,7 @@
 'use client';
 import { api } from '@convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
+import { calculateCompletionTime } from '@/app/utils/time';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import styles from './styles.module.scss';
 import {
@@ -82,12 +83,7 @@ export default function Controls() {
   }, [takeDamage]);
 
   // Memoized computed values
-  const completionTime = useMemo(() => {
-    if (gameState?.status.type === 'boss_defeated') {
-      return gameState.status.defeatedAt - gameState.status.startedAt;
-    }
-    return 0;
-  }, [gameState?.status]);
+  const completionTime = useMemo(() => calculateCompletionTime(gameState), [gameState]);
   // keyboard shortcuts
   const handleKeyboardShortcuts = useCallback((e: KeyboardEvent) => {
     if (e.key === '1') {

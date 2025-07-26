@@ -1,5 +1,6 @@
 import { api } from '@convex/_generated/api';
 import { useQuery } from 'convex/react';
+import { formatTime } from '@/app/utils/time';
 import styles from './Leaderboard.module.scss';
 
 interface LeaderboardProps {
@@ -16,14 +17,6 @@ export function Leaderboard({
   standalone = false
 }: LeaderboardProps) {
   const records = useQuery(api.leaderboard.getTopRecords, { limit });
-
-  const formatTime = (milliseconds: number): string => {
-    const seconds = Math.floor(milliseconds / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    
-    return `${minutes.toString().padStart(2, '0')}m${remainingSeconds.toString().padStart(2, '0')}s`;
-  };
 
   const formatDateTime = (timestamp: number): string => {
     return new Date(timestamp).toLocaleDateString('en-US', {

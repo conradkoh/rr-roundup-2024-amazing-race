@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatTime } from '@/app/utils/time';
 import styles from './TeamNameModal.module.scss';
 
 interface TeamNameModalProps {
@@ -16,14 +17,6 @@ export function TeamNameModal({
 }: TeamNameModalProps) {
   const [teamName, setTeamName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const formatTime = (milliseconds: number): string => {
-    const seconds = Math.floor(milliseconds / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    
-    return `${minutes.toString().padStart(2, '0')}m${remainingSeconds.toString().padStart(2, '0')}s`;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

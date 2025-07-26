@@ -1,6 +1,7 @@
 import { api } from '@convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
 import { useState } from 'react';
+import { formatTime } from '@/app/utils/time';
 import styles from './LeaderboardAdmin.module.scss';
 import { Id } from '@convex/_generated/dataModel';
 
@@ -20,14 +21,6 @@ export function LeaderboardAdmin() {
   
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
-
-  const formatTime = (milliseconds: number): string => {
-    const seconds = Math.floor(milliseconds / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    
-    return `${minutes.toString().padStart(2, '0')}m${remainingSeconds.toString().padStart(2, '0')}s`;
-  };
 
   const formatDateTime = (timestamp: number): string => {
     return new Date(timestamp).toLocaleString('en-US', {
