@@ -23,8 +23,8 @@ export function MainContentSection() {
       <ConditionalRender renderIf={() => isBossDefeated}>
         <div className={`p-5 ${styles['victory-container']}`}>
           <VictoryMessage />
-          <div className="pt-8">
-            <Leaderboard limit={5} showHeader={true} />
+          <div className="pt-16">
+            <Leaderboard limit={5} showHeader={true} className={styles['victory-leaderboard']} />
           </div>
         </div>
       </ConditionalRender>

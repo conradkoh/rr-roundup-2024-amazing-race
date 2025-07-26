@@ -1,3 +1,39 @@
 .victory-container {
-  margin-top: 300px;
+  margin-top: 150px;
+}
+
+.victory-leaderboard {
+  transform: scale(1.3);
+  margin: 2rem 0;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+  border: 3px solid #ffd700 !important;
+  background: rgba(0, 0, 0, 0.9) !important;
+}
+
+.victory-leaderboard .header {
+  font-size: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8) !important;
+}
+
+.victory-leaderboard .tableHeader {
+  font-size: 0.9rem !important;
+  padding: 0.8rem !important;
+}
+
+.victory-leaderboard .tableRow {
+  font-size: 0.9rem !important;
+  padding: 0.8rem !important;
+}
+
+.victory-leaderboard .rank {
+  font-size: 1.1rem !important;
+}
+
+.victory-leaderboard .teamName {
+  font-size: 1rem !important;
+}
+
+.victory-leaderboard .time {
+  font-size: 1rem !important;
 }
