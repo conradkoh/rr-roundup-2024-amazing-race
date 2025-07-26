@@ -137,7 +137,7 @@ export default function Controls() {
                     const seconds = Math.floor(elapsed / 1000);
                     const minutes = Math.floor(seconds / 60);
                     const remainingSeconds = seconds % 60;
-                    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')} (FINAL)`;
+                    return `${minutes.toString().padStart(2, '0')}m${remainingSeconds.toString().padStart(2, '0')}s (FINAL)`;
                   })()}
                 </div>
               )}

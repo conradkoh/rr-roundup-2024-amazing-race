@@ -21,7 +21,7 @@ export function GameTimer({ startTime, className = '' }: GameTimerProps) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes.toString().padStart(2, '0')}m${remainingSeconds.toString().padStart(2, '0')}s`;
   };
 
   return (

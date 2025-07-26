@@ -22,10 +22,7 @@ export function TeamNameModal({
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     
-    if (minutes > 0) {
-      return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-    }
-    return `${remainingSeconds}s`;
+    return `${minutes.toString().padStart(2, '0')}m${remainingSeconds.toString().padStart(2, '0')}s`;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
