@@ -3,6 +3,7 @@ import { ConditionalRender } from '@/app/components/condition/ConditionalRender'
 import { MainContentSection } from '@/app/components/sections/main-content';
 import { api } from '@convex/_generated/api';
 import { useQuery } from 'convex/react';
+import { GameTimer } from '@/app/components/game-timer';
 
 export default function Home() {
   const gameState = useQuery(api.gameState.get);
@@ -10,22 +11,39 @@ export default function Home() {
     // return <div>Loading...</div>;
     return <></>;
   }
-
   return (
     <>
       {/* Waiting Room Screen */}
       <div
-        className={`top-0 left-0 waiting-room-root h-screen w-screen flex flex-col items-center justify-center ${gameState.status.type === 'started' ? 'fadeout' : ''}`}
+        className={`top-0 left-0 waiting-room-root h-screen w-screen flex flex-col items-center justify-center ${gameState.status.type === 'started' || gameState.status.type === 'boss_defeated' ? 'fadeout' : ''}`}
       >
         <div className="text-red-600 game-font text-9xl text-shadow-lg p-5 pb-1 rounded-md">
           CHAOS LAIR
         </div>
       </div>
       {/* Main Screen */}
-      <ConditionalRender renderIf={() => gameState.status.type === 'started'}>
+      <ConditionalRender renderIf={() => gameState.status.type === 'started' || gameState.status.type === 'boss_defeated'}>
         <div
           className={`top-0 left-0 h-screen w-screen min-h-screen pt-8 font-[family-name:var(--font-geist-sans)] fadein`}
         >
+          {/* Game Timer Display */}
+          <div className="flex flex-col items-center pb-4">
+            <h2 className="text-2xl font-bold text-green-400">⏱️ Game Timer</h2>
+            {gameState.status.type === 'started' && (
+              <GameTimer startTime={gameState.status.startedAt} />
+            )}
+            {gameState.status.type === 'boss_defeated' && (
+              <div className="pt-2 text-4xl font-mono font-bold text-yellow-400">
+                {(() => {
+                  const elapsed = gameState.status.defeatedAt - gameState.status.startedAt;
+                  const seconds = Math.floor(elapsed / 1000);
+                  const minutes = Math.floor(seconds / 60);
+                  const remainingSeconds = seconds % 60;
+                  return `${minutes.toString().padStart(2, '0')}m${remainingSeconds.toString().padStart(2, '0')}s (FINAL)`;
+                })()}
+              </div>
+            )}
+          </div>
           <main className="h-full w-full">
             <div className="game-font h-full w-full flex flex-col">
               <div className="text-5xl text-center w-100">Captain Chaos</div>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Current Tasks Progress Tracker</title>
+  <meta name="description" content="Key information about current tasks and their progress" />
+</head>
+
+<body>
+  <!-- 
+    IMPORTANT: READ BEFORE MODIFYING
+    - Sections marked with 'importance: high' should not be removed or significantly altered unless explicitly instructed to do so.
+    - The task lists under 'Detailed Technical Tasks' should be updated to reflect current progress.
+    - Comments like this one are for guidance and should not be removed.
+    - IMPORTANT: This file is synced across multiple users. Each user is responsible for updating
+      the progress markers as they complete tasks.
+  -->
+
+  <h1>Current Tasks Progress Tracker</h1>
+
+  <section id="tech-stack">
+    <h2>Tech Stack</h2>
+    <meta name="importance" content="high" />
+    <!-- 
+      IMPORTANT: This section must be updated before working on any other tasks.
+      -->
+    <p>
+      Please specify the technologies and frameworks used in this project.
+    </p>
+    <ul>
+      <li>Frontend:
+        <ul>
+          <li>Next.js 15.0.2 (App Router)</li>
+          <li>React 19.0.0-rc (React Canary)</li>
+          <li>React DOM 19.0.0-rc</li>
+          <li>TypeScript 5.x</li>
+          <li>TailwindCSS 3.4.1</li>
+          <li>Sass 1.80.5 (SCSS modules)</li>
+        </ul>
+      </li>
+      <li>Backend:
+        <ul>
+          <li>Convex 1.17.0 (serverless backend platform)</li>
+          <li>TypeScript 5.x</li>
+          <li>Zod 3.23.8 (schema validation)</li>
+        </ul>
+      </li>
+      <li>Package Management:
+        <ul>
+          <li>pnpm (package manager)</li>
+        </ul>
+      </li>
+      <li>Tools:
+        <ul>
+          <li>Biome 0.3.3 (linting and formatting)</li>
+          <li>ESLint 8.x (additional linting)</li>
+          <li>PostCSS 8.x (CSS processing)</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <section id="overview">
+    <h2>Overview</h2>
+    <meta name="importance" content="high" />
+    <!-- 
+      DO NOT REMOVE: This section provides critical context for the entire document.
+      You may update the content if project guidelines change, but maintain the overall structure.
+    -->
+    <p>
+      This file contains key information about the tasks related to implementing
+      a leaderboard system for the Round Up 2024 Amazing Race boss fight game.
+    </p>
+    <ul>
+      <li>Each task should be about 1-3 story points</li>
+      <li>
+        If modifying existing functionality, do some research about existing
+        function names, entities, naming enums, and key interface names and
+        properties.
+      </li>
+      <li>
+        Plan and include key details into each task for better consistency
+        across tasks
+      </li>
+      <li>Update progress markers ([x], [.], [ ]) as you complete tasks</li>
+    </ul>
+  </section>
+
+  <section id="project-structure">
+    <h2>Project Structure</h2>
+    <meta name="importance" content="high" />
+    <!-- 
+      DO NOT REMOVE: This section outlines the critical project structure.
+      - Keep this structure updated as new components or modules are added
+      - Maintain consistent naming conventions
+      - Document any structural changes
+
+      Structure Documentation Guidelines:
+      - Focus on documenting:
+        * Feature-specific directories and their purpose
+        * Key architectural components (e.g. workspace packages)
+        * Critical implementation locations such as:
+          - Convex backend directory
+          - React components directory
+          - Shared utilities
+      - Omit auxiliary files (e.g., framework configuration files, assets) unless they are
+        critical to domain related feature implementation
+
+      Naming Conventions:
+      - React Components: PascalCase (e.g., HealthBar.tsx, EventLog.tsx)
+      - Utility functions: camelCase (e.g., formatCurrency.ts)
+      - Database tables: camelCase (e.g., events, gameState, barrierTimerState)
+      - Convex functions: camelCase (e.g., takeDamage, health, eventLog)
+      - Type definitions: PascalCase (e.g., GameStateType, EventType)
+      - SCSS modules: kebab-case (e.g., BarrierTimer.module.scss)
+    -->
+    <h3>Directory Structure</h3>
+    <pre>
+/
+├── convex/                        # Convex backend
+│   ├── _generated/                # Auto-generated Convex files
+│   ├── schema.ts                  # Database schema definition
+│   ├── boss.ts                    # Boss health and damage logic
+│   ├── gameState.ts               # Game state management
+│   ├── barrierState.ts            # Barrier timer logic
+│   └── tsconfig.json              # TypeScript config for Convex
+│
+├── src/
+│   ├── app/                       # Next.js App Router pages
+│   │   ├── page.tsx               # Main game page (presenter view)
+│   │   ├── layout.tsx             # Root layout
+│   │   ├── globals.scss           # Global styles
+│   │   ├── components/            # React components
+│   │   │   ├── barrier-timer/     # Barrier timer component
+│   │   │   ├── condition/         # Conditional rendering utility
+│   │   │   ├── event-log/         # Game event log display
+│   │   │   ├── health-bar/        # Boss health bar
+│   │   │   ├── victory-message/   # Victory screen
+│   │   │   └── sections/
+│   │   │       └── main-content/  # Main game content section
+│   │   ├── controls/              # Admin/control panel
+│   │   │   ├── page.tsx           # Controls interface
+│   │   │   └── layout.tsx         # Controls layout
+│   │   ├── local/                 # Local testing interface
+│   │   │   ├── page.tsx           # Local damage testing
+│   │   │   └── layout.tsx         # Local layout
+│   │   ├── fonts/                 # Custom fonts (Press Start 2P, Geist)
+│   │   └── utils/
+│   │       └── assets/            # Asset utilities
+│   └── providers/
+│       └── ConvexClientProvider.tsx # Convex React client setup
+│
+├── public/
+│   └── assets/                    # Game assets
+│       ├── barrier-up.png         # Barrier up image
+│       ├── barrier-down.png       # Barrier down image
+│       ├── chaos-lair-bg.jpeg     # Background image
+│       └── heart.png              # Health icon
+│
+├── package.json                   # Dependencies and scripts
+├── next.config.ts                 # Next.js configuration
+├── tailwind.config.ts             # TailwindCSS configuration
+├── tsconfig.json                  # TypeScript configuration
+└── postcss.config.mjs             # PostCSS configuration
+    </pre>
+
+    <section id="process">
+      <h2>Process</h2>
+      <meta name="importance" content="high" />
+      <!-- 
+      DO NOT REMOVE: This section outlines the critical process steps.
+      Update only if the process changes, otherwise keep as is.
+    -->
+      <ol>
+        <li>Update the tech stack before proceeding with any tasks.</li>
+        <li>Do some research for the feature.</li>
+        <li>
+          Create a list of technical tasks with important information (file
+          names, function names, component names, interface names, and enums
+          where applicable)
+        </li>
+        <li>Start working on each task one by one.</li>
+        <li>Run the type checks to ensure that everything is working.</li>
+        <li>Run the tests to ensure that everything is working.</li>
+        <li>
+          Provide an update for the latest state of the task list and update
+          this file.
+        </li>
+      </ol>
+    </section>
+
+    <section id="legend">
+      <h2>Legend</h2>
+      <meta name="importance" content="medium" />
+      <!-- 
+      This legend explains the task status markers.
+      Update only if the status marking system changes.
+    -->
+      <ul>
+        <li>[ ] - Not started</li>
+        <li>[.] - In progress</li>
+        <li>[x] - Completed</li>
+      </ul>
+    </section>
+
+    <section id="technical-tasks">
+      <h2>Technical Tasks</h2>
+      <meta name="importance" content="high" />
+      <!-- 
+      IMPORTANT: This section contains the actual task lists.
+      - Update the status markers ([ ], [.], [x]) as tasks progress.
+      - Add new tasks or versions as needed.
+      - Keep the structure (headings, subheadings) consistent.
+      - Ensure all task descriptions include relevant details such as:
+        * File names
+        * Function names
+        * Component names
+        * Interface / Type / Enum names (where applicable)
+        * Enum Values (where applicable)
+      - Do not include tests in the list of tasks.
+      - The implementation notes at the end of each version provide context and should be updated as needed.
+      - When adding a new version, create a new section with appropriate metadata.
+
+      ⚠️ Implementation Reminders:
+      - Keep changes incremental - Make small, focused changes that are easy to validate
+      - Verify before proceeding - After creating each file, verify it compiles before moving on
+      - Follow existing patterns - Match the code style and patterns already in the codebase
+      - Preserve existing code - Be very careful when modifying existing files
+      - Minimal dependencies - Avoid adding unnecessary dependencies
+      - Implementation order - Start with data models, then backend, then frontend core components, then integration
+      - Type safety first - Ensure strong typing throughout the implementation
+      - Complete one feature at a time - Implement features vertically (backend to frontend) before moving to the next
+    -->
+      <section id="v1.0">
+        <meta name="version" content="1.0" />
+        <h1>📍 Version 1.0 - Leaderboard System</h1>
+        <section feature="leaderboard">
+          <h3>🏆 Leaderboard Feature</h3>
+          <ul>
+            <!-- Backend Schema & Functions -->
+            <li>[x] Update Convex schema in `convex/schema.ts` to add `leaderboard` table with fields: `teamName` (string), `completionTime` (number), `gameStartTime` (number), `gameEndTime` (number), `createdAt` (number)</li>
+            <li>[x] Create `convex/leaderboard.ts` with functions: `addRecord` (mutation), `getAll` (query), `updateRecord` (mutation), `deleteRecord` (mutation)</li>
+            <li>[x] Update `convex/boss.ts` to track when boss dies (health reaches 0) and expose `getBossDeathInfo` query function</li>
+            <li>[ ] Update `convex/gameState.ts` to include completion tracking with `GameCompletionStatus` type and `markCompleted` mutation</li>
+            
+            <!-- Frontend Components -->
+            <li>[x] Create `src/app/components/leaderboard/Leaderboard.tsx` component to display leaderboard records with proper sorting by completion time</li>
+            <li>[x] Create `src/app/components/leaderboard/LeaderboardAdmin.tsx` component for admin CRUD operations (edit/delete records)</li>
+            <li>[x] Create `src/app/components/leaderboard/TeamNameModal.tsx` modal component for team name input when boss dies</li>
+            <li>[x] Create `src/app/components/leaderboard/index.tsx` barrel export file</li>
+            <li>[x] Add `src/app/components/leaderboard/Leaderboard.module.scss` for leaderboard styling</li>
+            
+            <!-- Integration & UI Updates -->
+            <li>[x] Update `src/app/controls/page.tsx` to detect boss death and show team name modal</li>
+            <li>[x] Add leaderboard section to controls page with admin functionality</li>
+            <li>[x] Update `src/app/controls/TeamNameModal.tsx` if it exists, or create it for team name capture</li>
+            <li>[x] Add leaderboard display to main presenter view (`src/app/page.tsx`)</li>
+            <li>[x] Create standalone leaderboard page at `/leaderboard` route for public display</li>
+            
+            <!-- Types & Utilities -->
+            <li>[x] Create TypeScript interfaces: `LeaderboardRecord`, `GameCompletionInfo`, `TeamSubmissionData`</li>
+            <li>[x] Add utility functions for time formatting and leaderboard sorting</li>
+          </ul>
+          
+          <h4>📋 Implementation Notes</h4>
+          <ul>
+            <li><strong>Database Schema:</strong> ✅ The leaderboard table stores team completion records with precise timing data</li>
+            <li><strong>Game Flow:</strong> ✅ When boss health reaches 0, capture game start time from gameState and current time as end time</li>
+            <li><strong>Admin Controls:</strong> ✅ Full CRUD operations available in controls panel for leaderboard management</li>
+            <li><strong>Time Calculation:</strong> ✅ Completion time = gameEndTime - gameStartTime (both stored as timestamps)</li>
+            <li><strong>Data Consistency:</strong> ✅ TypeScript interfaces ensure type safety between frontend and backend</li>
+            <li><strong>UI/UX:</strong> ✅ Modal appears immediately when boss dies, admin panel shows sortable leaderboard table</li>
+            <li><strong>Presenter View:</strong> ✅ Top 5 leaderboard records displayed on victory screen</li>
+            <li><strong>Styling:</strong> ✅ Retro gaming theme with gold, silver, bronze highlighting for top 3 positions</li>
+          </ul>
+          
+          <h4>🎯 Key Features Implemented</h4>
+          <ul>
+            <li>✅ Automatic boss death detection and time tracking</li>
+            <li>✅ Modal popup for team name entry when boss dies</li>
+            <li>✅ Real-time leaderboard display sorted by completion time</li>
+            <li>✅ Admin panel with edit/delete functionality for records</li>
+            <li>✅ Responsive design with retro gaming aesthetics</li>
+            <li>✅ Type-safe Convex backend with proper schema validation</li>
+            <li>✅ Integration with existing game state and boss health systems</li>
+            <li>✅ Standalone leaderboard page for public viewing</li>
+            <li>✅ Auto-refresh functionality on standalone page</li>
+          </ul>
+          
+          <h4>🌐 Access Points</h4>
+          <ul>
+            <li><strong>Main Game:</strong> http://localhost:3001/ (presenter view with victory leaderboard)</li>
+            <li><strong>Controls:</strong> http://localhost:3001/controls (admin panel with full management)</li>
+            <li><strong>Standalone Leaderboard:</strong> http://localhost:3001/leaderboard (public display page)</li>
+          </ul>
+          
+          <h4>🚀 Ready for Testing</h4>
+          <p>The leaderboard system is fully implemented and ready for testing. The build compiles successfully with no errors.</p>
+        </section>
+      </section>
+    </section>
+</body>
+
+</html>

@@ -1,0 +1,149 @@
+.leaderboard {
+  font-family: 'Press Start 2P', monospace;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #ffd700;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+/* Standalone page styles */
+.standaloneLeaderboard {
+  background: rgba(0, 0, 0, 0.95);
+  border: 3px solid #ffd700;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 0;
+  box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+}
+
+.header {
+  text-align: center;
+  color: #ffd700;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.table {
+  width: 100%;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 60px 1fr 80px 120px;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 215, 0, 0.1);
+  border-bottom: 2px solid #ffd700;
+  font-size: 0.7rem;
+  color: #ffd700;
+  text-transform: uppercase;
+}
+
+/* Enhanced styles for standalone mode */
+.standaloneLeaderboard .tableHeader {
+  font-size: 0.8rem;
+  padding: 0.75rem;
+  grid-template-columns: 80px 1fr 100px 140px;
+}
+
+.standaloneLeaderboard .tableRow {
+  font-size: 0.8rem;
+  padding: 0.75rem;
+  grid-template-columns: 80px 1fr 100px 140px;
+}
+
+.standaloneLeaderboard .rank {
+  font-size: 1rem;
+}
+
+.standaloneLeaderboard .teamName {
+  font-size: 0.9rem;
+}
+
+.standaloneLeaderboard .time {
+  font-size: 0.9rem;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 60px 1fr 80px 120px;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.7rem;
+  color: #ffffff;
+  transition: background-color 0.2s ease;
+}
+
+.tableRow:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.firstPlace {
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), transparent);
+  border-left: 3px solid #ffd700;
+}
+
+.secondPlace {
+  background: linear-gradient(90deg, rgba(192, 192, 192, 0.2), transparent);
+  border-left: 3px solid #c0c0c0;
+}
+
+.thirdPlace {
+  background: linear-gradient(90deg, rgba(205, 127, 50, 0.2), transparent);
+  border-left: 3px solid #cd7f32;
+}
+
+.rank {
+  text-align: center;
+  font-weight: bold;
+}
+
+.teamName {
+  font-weight: bold;
+  color: #00ff00;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.time {
+  text-align: center;
+  font-weight: bold;
+  color: #ffff00;
+}
+
+.date {
+  text-align: center;
+  color: #cccccc;
+  font-size: 0.6rem;
+}
+
+.emptyState {
+  text-align: center;
+  color: #cccccc;
+  font-size: 0.8rem;
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 50px 1fr 70px 100px;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    font-size: 0.6rem;
+  }
+
+  .header {
+    font-size: 1rem;
+  }
+
+  .date {
+    font-size: 0.5rem;
+  }
+}

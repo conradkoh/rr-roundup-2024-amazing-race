@@ -1,23 +1,34 @@
 'use client';
 import { api } from '@convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
-import { useCallback, useEffect } from 'react';
+import { calculateCompletionTime } from '@/app/utils/time';
+import { useCallback, useEffect, useState, useMemo, useRef } from 'react';
 import styles from './styles.module.scss';
 import {
   ConditionalRender,
   RenderIfDefined,
 } from '@/app/components/condition/ConditionalRender';
 import { MainContentSection } from '@/app/components/sections/main-content';
+import { LeaderboardAdminModal, TeamNameModal } from '@/app/components/leaderboard';
+import { GameTimer } from '@/app/components/game-timer';
 
 export default function Controls() {
   const callTakeDamage = useMutation(api.boss.takeDamage);
   const reset = useMutation(api.gameState.reset);
   const callStart = useMutation(api.gameState.start);
-  const stop = useMutation(api.gameState.stop);
   const gameState = useQuery(api.gameState.get);
+  const addLeaderboardRecord = useMutation(api.leaderboard.addRecord);
+  
+  const [showTeamModal, setShowTeamModal] = useState(false);
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  
+  // Ref to track previous game state for detecting transitions
+  const previousGameStateRef = useRef<string | null>(null);
+  
   const start = useCallback(() => {
     callStart();
   }, [callStart]);
+
   const takeDamage = useCallback(
     (dmg: { amount: number }) => {
       if (gameState?.status.type === 'started') {
@@ -29,65 +40,138 @@ export default function Controls() {
     },
     [callTakeDamage, gameState?.status.type, start]
   );
-  // keyboard shortcuts
+
+  const handleTeamSubmission = useCallback(async (teamName: string) => {
+    if (gameState?.status.type !== 'boss_defeated') return;
+    
+    await addLeaderboardRecord({
+      teamName,
+      gameStartTime: gameState.status.startedAt,
+      gameEndTime: gameState.status.defeatedAt,
+    });
+    
+    setShowTeamModal(false);
+  }, [gameState?.status, addLeaderboardRecord]);
+
+  const handleResetClick = useCallback(() => {
+    reset();
+    setShowTeamModal(false); // Close modal on reset
+  }, [reset]);
+
+  const handleTeamModalOpen = useCallback(() => {
+    setShowTeamModal(true);
+  }, []);
+
+  const handleTeamModalClose = useCallback(() => {
+    setShowTeamModal(false);
+  }, []);
+
+  const handleAdminModalOpen = useCallback(() => {
+    setShowAdminModal(true);
+  }, []);
+
+  const handleAdminModalClose = useCallback(() => {
+    setShowAdminModal(false);
+  }, []);
+
+  // Memoized computed values
+  const isGameStarted = useMemo(() => gameState?.status.type === 'started', [gameState?.status.type]);
+  const isGameReady = useMemo(() => gameState?.status.type === 'ready', [gameState?.status.type]);
+  const isBossDefeated = useMemo(() => gameState?.status.type === 'boss_defeated', [gameState?.status.type]);
+
+  // Auto-show team modal when state transitions to boss_defeated
   useEffect(() => {
-    // press 1 for head shot
-    const eventHandler = (e: KeyboardEvent) => {
-      if (e.key === '1') {
-        // get 5-dmg-btn and click it
-        const btn = document.getElementById('5-dmg-btn');
-        if (btn) {
-          btn.click();
-          btn.classList.add(`${styles['active']}`);
-          setTimeout(() => btn.classList.remove(`${styles['active']}`), 100);
-        }
-      }
-      if (e.key === '2') {
-        const btn = document.getElementById('2-dmg-btn');
-        if (btn) {
-          btn.click();
-          btn.classList.add(`${styles['active']}`);
-          setTimeout(() => btn.classList.remove(`${styles['active']}`), 100);
-        }
-      }
-    };
-    window.addEventListener('keydown', eventHandler);
-    return () => {
-      window.removeEventListener('keydown', eventHandler);
-    };
+    const currentGameState = gameState?.status.type;
+    const previousGameState = previousGameStateRef.current;
+    
+    // Only show modal if we just transitioned to boss_defeated (not if we're already in that state)
+    if (currentGameState === 'boss_defeated' && previousGameState !== 'boss_defeated' && !showTeamModal) {
+      setShowTeamModal(true);
+    }
+    
+    // Update the ref with current state for next comparison
+    previousGameStateRef.current = currentGameState || null;
+  }, [gameState?.status.type, showTeamModal]);
+  const handleHeadDamage = useCallback(() => {
+    takeDamage({ amount: 5 });
   }, [takeDamage]);
+
+  const handleBodyDamage = useCallback(() => {
+    takeDamage({ amount: 2 });
+  }, [takeDamage]);
+
+  // Memoized computed values
+  const completionTime = useMemo(() => calculateCompletionTime(gameState), [gameState]);
+  // keyboard shortcuts
+  const handleKeyboardShortcuts = useCallback((e: KeyboardEvent) => {
+    if (e.key === '1') {
+      // get 5-dmg-btn and click it
+      const btn = document.getElementById('5-dmg-btn');
+      if (btn) {
+        btn.click();
+        btn.classList.add(`${styles['active']}`);
+        setTimeout(() => btn.classList.remove(`${styles['active']}`), 100);
+      }
+    }
+    if (e.key === '2') {
+      const btn = document.getElementById('2-dmg-btn');
+      if (btn) {
+        btn.click();
+        btn.classList.add(`${styles['active']}`);
+        setTimeout(() => btn.classList.remove(`${styles['active']}`), 100);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyboardShortcuts);
+    return () => {
+      window.removeEventListener('keydown', handleKeyboardShortcuts);
+    };
+  }, [handleKeyboardShortcuts]);
   return (
     <RenderIfDefined
       value={gameState}
       Component={({ value: gameState }) => (
         <>
           <h1 className="text-3xl font-bold">Controls</h1>
+          
+          {/* Timer Display */}
+          <ConditionalRender renderIf={() => isGameStarted || isBossDefeated}>
+            <div className="pt-4">
+              <h2 className="text-2xl font-bold text-green-400">⏱️ Game Timer</h2>
+              {gameState.status.type === 'started' && (
+                <GameTimer startTime={gameState.status.startedAt} />
+              )}
+              {gameState.status.type === 'boss_defeated' && (
+                <div className="pt-2 text-4xl font-mono font-bold text-yellow-400">
+                  {(() => {
+                    const elapsed = gameState.status.defeatedAt - gameState.status.startedAt;
+                    const seconds = Math.floor(elapsed / 1000);
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    return `${minutes.toString().padStart(2, '0')}m${remainingSeconds.toString().padStart(2, '0')}s (FINAL)`;
+                  })()}
+                </div>
+              )}
+            </div>
+          </ConditionalRender>
+
           <h2 className="pt-2 text-2xl font-bold">Game</h2>
           <div className="pt-2 space-x-2">
             <ConditionalRender
-              renderIf={() => gameState.status.type === 'ready'}
+              renderIf={() => isGameReady}
             >
               <button
                 className={`p-2 font-mono font-bold rounded-md bg-gray-200 ${styles['start']} ${styles['start-stop-btns']}`}
-                onClick={() => start()}
+                onClick={start}
               >
                 START
               </button>
             </ConditionalRender>
-            <ConditionalRender
-              renderIf={() => gameState.status.type === 'started'}
-            >
-              {/* STOP BUTTON */}
-              <button
-                className={`p-2 font-mono font-bold rounded-md bg-gray-200 ${styles['stop']} ${styles['start-stop-btns']}`}
-                onClick={() => stop()}
-              >
-                STOP
-              </button>
-            </ConditionalRender>
             <button
               className="p-2 font-mono font-bold rounded-md bg-gray-200"
-              onClick={() => reset()}
+              onClick={handleResetClick}
             >
               RESET
             </button>
@@ -96,7 +180,27 @@ export default function Controls() {
                 OPEN PRESENTER VIEW
               </button>
             </a>
+            <a href="/leaderboard" target="_blank">
+              <button className="p-2 font-mono font-bold rounded-md bg-gray-200">
+                VIEW LEADERBOARD
+              </button>
+            </a>
           </div>
+          
+          {/* Add Team to Leaderboard Button */}
+          <ConditionalRender renderIf={() => isBossDefeated}>
+            <div className="pt-4">
+              <h3 className="text-xl font-bold text-green-400">🏆 Boss Defeated!</h3>
+              <div className="pt-2">
+                <button
+                  className="p-3 font-mono font-bold rounded-md bg-green-200 hover:bg-green-300 transition-colors"
+                  onClick={handleTeamModalOpen}
+                >
+                  ✨ ADD TEAM TO LEADERBOARD
+                </button>
+              </div>
+            </div>
+          </ConditionalRender>
           <h2 className="pt-2 text-2xl font-bold">Damage</h2>
           <p>
             Click on the control when the boss is hit to cause him to take
@@ -108,9 +212,7 @@ export default function Controls() {
               <button
                 id="5-dmg-btn"
                 className={`p-2 font-mono rounded-md bg-gray-200 ${styles['button']}`}
-                onClick={() => {
-                  takeDamage({ amount: 5 });
-                }}
+                onClick={handleHeadDamage}
               >
                 HEAD (-5 HP)
               </button>
@@ -120,9 +222,7 @@ export default function Controls() {
               <button
                 id="2-dmg-btn"
                 className={`p-2 font-mono rounded-md bg-gray-200 ${styles['button']}`}
-                onClick={() => {
-                  takeDamage({ amount: 2 });
-                }}
+                onClick={handleBodyDamage}
               >
                 BODY (-2 HP)
               </button>
@@ -131,10 +231,37 @@ export default function Controls() {
           <h2 className="pt-2 text-2xl font-bold">Barrier Control</h2>
           <BarrierControlEmitter />
 
+          {/* Leaderboard Management */}
+          <h2 className="pt-4 text-2xl font-bold">Leaderboard Management</h2>
+          <div className="pt-2">
+            <button
+              className="p-2 font-mono font-bold rounded-md bg-red-200 hover:bg-red-300 transition-colors"
+              onClick={handleAdminModalOpen}
+            >
+              🔧 MANAGE LEADERBOARD
+            </button>
+          </div>
+
           <h2 className="pt-2 text-2xl font-bold">Preview</h2>
           <div className="pt-8">
             <MainContentSection />
           </div>
+
+          {/* Team Name Modal */}
+          {gameState?.status.type === 'boss_defeated' && (
+            <TeamNameModal
+              isOpen={showTeamModal}
+              onSubmit={handleTeamSubmission}
+              onClose={handleTeamModalClose}
+              completionTime={completionTime}
+            />
+          )}
+
+          {/* Leaderboard Admin Modal */}
+          <LeaderboardAdminModal
+            isOpen={showAdminModal}
+            onClose={handleAdminModalClose}
+          />
         </>
       )}
     ></RenderIfDefined>
@@ -144,6 +271,10 @@ export default function Controls() {
 function BarrierControlEmitter() {
   const barrierState = useQuery(api.barrierState.get);
   const tickToggle = useMutation(api.barrierState.tickToggle);
+
+  const nextTransitionTime = useMemo(() => {
+    return barrierState?.nextTransition.at ? new Date(barrierState.nextTransition.at).toISOString() : '-';
+  }, [barrierState?.nextTransition.at]);
 
   useEffect(() => {
     // timely updates - ideally, we want to try to do a fetch as close to the expected update time as possible
@@ -171,14 +302,12 @@ function BarrierControlEmitter() {
       clearInterval(interval);
     };
   }, [tickToggle]);
+
   return (
     <>
       <div>Barrier State: {barrierState?.barrierState || '-'}</div>
       <div>
-        Next Transition At:{' '}
-        {barrierState?.nextTransition.at
-          ? new Date(barrierState?.nextTransition.at).toISOString()
-          : '-'}
+        Next Transition At: {nextTransitionTime}
       </div>
     </>
   );

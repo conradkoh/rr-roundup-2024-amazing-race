@@ -10,10 +10,17 @@ const schema = defineSchema({
     }),
   }).index('by_timestamp', ['timestamp']),
   gameState: defineTable({
-    status: v.object({
-      type: v.literal('started'),
-      startedAt: v.optional(v.number()),
-    }),
+    status: v.union(
+      v.object({
+        type: v.literal('started'),
+        startedAt: v.number(),
+      }),
+      v.object({
+        type: v.literal('boss_defeated'),
+        startedAt: v.number(),
+        defeatedAt: v.number(),
+      }),
+    ),
   }),
   barrierTimerState: defineTable({
     barrierState: v.union(v.literal('barrier_up'), v.literal('barrier_down')),
@@ -23,5 +30,13 @@ const schema = defineSchema({
       nextState: v.union(v.literal('barrier_up'), v.literal('barrier_down')),
     }),
   }),
+  leaderboard: defineTable({
+    teamName: v.string(),
+    completionTime: v.number(), // Duration in milliseconds
+    gameStartTime: v.number(), // Timestamp when game started
+    gameEndTime: v.number(), // Timestamp when boss died
+    createdAt: v.number(), // Timestamp when record was created
+  }).index('by_completion_time', ['completionTime'])
+    .index('by_created_at', ['createdAt']),
 });
 export default schema;

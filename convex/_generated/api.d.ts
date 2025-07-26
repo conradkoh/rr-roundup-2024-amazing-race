@@ -16,6 +16,7 @@ import type {
 import type * as barrierState from "../barrierState.js";
 import type * as boss from "../boss.js";
 import type * as gameState from "../gameState.js";
+import type * as leaderboard from "../leaderboard.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -29,6 +30,7 @@ declare const fullApi: ApiFromModules<{
   barrierState: typeof barrierState;
   boss: typeof boss;
   gameState: typeof gameState;
+  leaderboard: typeof leaderboard;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
