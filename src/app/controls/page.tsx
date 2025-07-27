@@ -163,25 +163,25 @@ export default function Controls() {
               renderIf={() => isGameReady}
             >
               <button
-                className={`p-2 font-mono font-bold rounded-md bg-gray-200 ${styles['start']} ${styles['start-stop-btns']}`}
+                className={`p-2 font-mono font-bold rounded-md bg-gray-200 text-black ${styles['start']} ${styles['start-stop-btns']}`}
                 onClick={start}
               >
                 START
               </button>
             </ConditionalRender>
             <button
-              className="p-2 font-mono font-bold rounded-md bg-gray-200"
+              className="p-2 font-mono font-bold rounded-md bg-gray-200 text-black"
               onClick={handleResetClick}
             >
               RESET
             </button>
             <a href="/" target="_blank">
-              <button className="p-2 font-mono font-bold rounded-md bg-gray-200">
+              <button className="p-2 font-mono font-bold rounded-md bg-gray-200 text-black">
                 OPEN PRESENTER VIEW
               </button>
             </a>
             <a href="/leaderboard" target="_blank">
-              <button className="p-2 font-mono font-bold rounded-md bg-gray-200">
+              <button className="p-2 font-mono font-bold rounded-md bg-gray-200 text-black">
                 VIEW LEADERBOARD
               </button>
             </a>
@@ -193,7 +193,7 @@ export default function Controls() {
               <h3 className="text-xl font-bold text-green-400">🏆 Boss Defeated!</h3>
               <div className="pt-2">
                 <button
-                  className="p-3 font-mono font-bold rounded-md bg-green-200 hover:bg-green-300 transition-colors"
+                  className="p-3 font-mono font-bold rounded-md bg-green-200 text-black hover:bg-green-300 transition-colors"
                   onClick={handleTeamModalOpen}
                 >
                   ✨ ADD TEAM TO LEADERBOARD
@@ -211,7 +211,7 @@ export default function Controls() {
               <div className="font-bold text-center">Hotkey: 1</div>
               <button
                 id="5-dmg-btn"
-                className={`p-2 font-mono rounded-md bg-gray-200 ${styles['button']}`}
+                className={`p-2 font-mono rounded-md bg-gray-200 text-black ${styles['button']}`}
                 onClick={handleHeadDamage}
               >
                 HEAD (-5 HP)
@@ -221,7 +221,7 @@ export default function Controls() {
               <div className="font-bold text-center">Hotkey: 2</div>
               <button
                 id="2-dmg-btn"
-                className={`p-2 font-mono rounded-md bg-gray-200 ${styles['button']}`}
+                className={`p-2 font-mono rounded-md bg-gray-200 text-black ${styles['button']}`}
                 onClick={handleBodyDamage}
               >
                 BODY (-2 HP)
@@ -235,7 +235,7 @@ export default function Controls() {
           <h2 className="pt-4 text-2xl font-bold">Leaderboard Management</h2>
           <div className="pt-2">
             <button
-              className="p-2 font-mono font-bold rounded-md bg-red-200 hover:bg-red-300 transition-colors"
+              className="p-2 font-mono font-bold rounded-md bg-red-200 text-black hover:bg-red-300 transition-colors"
               onClick={handleAdminModalOpen}
             >
               🔧 MANAGE LEADERBOARD
