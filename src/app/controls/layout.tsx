@@ -1,8 +1,8 @@
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Boss Fight - Controls',
-  description: 'Round Up 2024 Boss Fight - Controls',
+  title: "Boss Fight - Controls",
+  description: "RR Kids @ Play 2025 Boss Fight - Controls",
 };
 export default function ControlsLayout({
   children,

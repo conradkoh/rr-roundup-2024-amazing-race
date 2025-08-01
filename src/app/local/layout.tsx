@@ -1,8 +1,8 @@
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Boss Fight - Local',
-  description: 'Round Up 2024 Boss Fight - Local',
+  title: "Boss Fight - Local",
+  description: "RR Kids @ Play 2025 Boss Fight - Local",
 };
 
 export default function LocalLayout({

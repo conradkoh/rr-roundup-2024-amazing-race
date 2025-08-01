@@ -1,8 +1,8 @@
-'use client';
-import { HealthBarComponent } from '@/app/components/health-bar/HealthBar';
-import { VictoryMessage } from '@/app/components/victory-message/VictoryMessage';
-import { useCallback, useEffect, useState } from 'react';
-import styles from './styles.module.scss';
+"use client";
+import { HealthBarComponent } from "@/app/components/health-bar/HealthBar";
+import { VictoryMessage } from "@/app/components/victory-message/VictoryMessage";
+import { useCallback, useEffect, useState } from "react";
+import styles from "./styles.module.scss";
 
 export default function Home() {
   const [health, setHealth] = useState(100);
@@ -18,27 +18,27 @@ export default function Home() {
   useEffect(() => {
     // press 1 for head shot
     const eventHandler = (e: KeyboardEvent) => {
-      if (e.key === '1') {
+      if (e.key === "1") {
         // get 5-dmg-btn and click it
-        const btn = document.getElementById('5-dmg-btn');
+        const btn = document.getElementById("5-dmg-btn");
         if (btn) {
           btn.click();
-          btn.classList.add(`${styles['active']}`);
-          setTimeout(() => btn.classList.remove(`${styles['active']}`), 100);
+          btn.classList.add(`${styles["active"]}`);
+          setTimeout(() => btn.classList.remove(`${styles["active"]}`), 100);
         }
       }
-      if (e.key === '2') {
-        const btn = document.getElementById('2-dmg-btn');
+      if (e.key === "2") {
+        const btn = document.getElementById("2-dmg-btn");
         if (btn) {
           btn.click();
-          btn.classList.add(`${styles['active']}`);
-          setTimeout(() => btn.classList.remove(`${styles['active']}`), 100);
+          btn.classList.add(`${styles["active"]}`);
+          setTimeout(() => btn.classList.remove(`${styles["active"]}`), 100);
         }
       }
     };
-    window.addEventListener('keydown', eventHandler);
+    window.addEventListener("keydown", eventHandler);
     return () => {
-      window.removeEventListener('keydown', eventHandler);
+      window.removeEventListener("keydown", eventHandler);
     };
   }, [takeDamage]);
   return (
@@ -60,7 +60,7 @@ export default function Home() {
                     <div className="font-bold text-center">Hotkey: 1</div>
                     <button
                       id="5-dmg-btn"
-                      className={`p-2 rounded-sm bg-gray-200 ${styles['button']}`}
+                      className={`p-2 rounded-sm bg-gray-200 ${styles["button"]}`}
                       onClick={() => takeDamage(5)}
                     >
                       HEAD (-5 HP)
@@ -70,14 +70,14 @@ export default function Home() {
                     <div className="font-bold text-center">Hotkey: 2</div>
                     <button
                       id="2-dmg-btn"
-                      className={`p-2 rounded-sm bg-gray-200 ${styles['button']}`}
+                      className={`p-2 rounded-sm bg-gray-200 ${styles["button"]}`}
                       onClick={() => takeDamage(2)}
                     >
                       BODY (-2 HP)
                     </button>
                   </div>
                   <button
-                    className={`p-2 rounded-sm bg-gray-200 ${styles['button']}`}
+                    className={`p-2 rounded-sm bg-gray-200 ${styles["button"]}`}
                     onClick={useCallback(() => {
                       setHealth(100);
                     }, [])}
@@ -90,7 +90,7 @@ export default function Home() {
           </div>
         </main>
         <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-          <div>Bethel RR Round Up 2024</div>
+          <div>RR Kids @ Play 2025</div>
         </footer>
       </div>
     </>
